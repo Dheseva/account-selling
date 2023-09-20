@@ -1,6 +1,7 @@
 package config
 
 import (
+	"account-selling/models"
 	"fmt"
 	"os"
 
@@ -23,4 +24,11 @@ panic("Cannot connect to the database")
 }
 
 DB = connection
+AutoMigration(connection)
+}
+
+func AutoMigration(con *gorm.DB){
+
+	con.AutoMigrate(&models.User{})
+	con.AutoMigrate(&models.UserData{})
 }

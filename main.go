@@ -24,10 +24,10 @@ func main() {
 
 	routes.Setup(app)
 
-	app.Listen(GetPort())
+	app.Listen(getPort())
 }
 
-func GetPort() string{
+func getPort() string{
 	port := os.Getenv("DB_PORT")
 	if port == ""{
 		return ":8000"
