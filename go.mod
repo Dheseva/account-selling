@@ -7,7 +7,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/crypto v0.7.0
+	golang.org/x/crypto v0.13.0
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.4
 )
