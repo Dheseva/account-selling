@@ -1,7 +1,9 @@
 package config
 
 import (
-	"account-selling/models"
+	modelitems "account-selling/models/items"
+	modeltransact "account-selling/models/transaction"
+	modelsuser "account-selling/models/user"
 	"fmt"
 	"os"
 
@@ -29,6 +31,10 @@ AutoMigration(connection)
 
 func AutoMigration(con *gorm.DB){
 
-	con.AutoMigrate(&models.User{})
-	con.AutoMigrate(&models.UserData{})
+	con.AutoMigrate(&modelsuser.User{})
+	con.AutoMigrate(&modelsuser.UserData{})
+
+	con.AutoMigrate(&modelitems.Items{})
+	
+	con.AutoMigrate(&modeltransact.Transaction{})
 }

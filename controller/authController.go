@@ -3,7 +3,7 @@ package controller
 import (
 	"account-selling/config"
 	"account-selling/middleware"
-	"account-selling/models"
+	modelsuser "account-selling/models/user"
 	"os"
 	"strconv"
 	"time"
@@ -21,7 +21,7 @@ func Register(c *fiber.Ctx) error {
 	if err := c.BodyParser(&data); err != nil {
 		return err
 	}
-	userdata := models.UserData{
+	userdata := modelsuser.UserData{
 		Nickname: data["name"],
 		Created_at: time.Now().UnixMilli(),
 		Updated_at: time.Now().UnixMilli(),
@@ -29,7 +29,7 @@ func Register(c *fiber.Ctx) error {
 	config.DB.Create(&userdata)
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
-	user := models.User{
+	user := modelsuser.User{
 		Name: data["name"],
 		Password: password,
 		Email: data["email"],
@@ -57,7 +57,7 @@ func Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	var user models.User
+	var user modelsuser.User
 
 	config.DB.Where("email = ?", data["email"]).First(&user)
 
@@ -79,7 +79,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	var userdata models.UserData
+	var userdata modelsuser.UserData
 	config.DB.Where("id = ?", user.UData_id).First(&userdata)
 	convKey := []byte(Secretkey)
 
@@ -149,10 +149,10 @@ func User (c *fiber.Ctx) error{
 
 	claims := token.Claims.(*middleware.MyCustomClaims)
 
-	var user models.User
+	var user modelsuser.User
 	config.DB.Where("id = ?",claims.Issuer).First(&user)
 
-	var userdata models.UserData
+	var userdata modelsuser.UserData
 	config.DB.Where("id = ?", user.UData_id).First(&userdata)
 
 	return c.JSON(fiber.Map{
