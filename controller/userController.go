@@ -3,7 +3,7 @@ package controller
 import (
 	"account-selling/config"
 	"account-selling/middleware"
-	"account-selling/models"
+	modelsuser "account-selling/models/user"
 	"strconv"
 	"time"
 
@@ -46,10 +46,10 @@ func UpdateDataUser(c *fiber.Ctx) error {
 
 	claims := token.Claims.(*middleware.MyCustomClaims)
 
-	var user models.User
+	var user modelsuser.User
 	config.DB.Where("id = ?", claims.Issuer).First(&user)
 
-	var userdata models.UserData
+	var userdata modelsuser.UserData
 	config.DB.Where("id = ?", user.UData_id).First(&userdata)
 
 	useridInt := int(user.Id)
@@ -70,7 +70,7 @@ func UpdateDataUser(c *fiber.Ctx) error {
 		dateInput = 0
 	}
 
-	userdata = models.UserData{
+	userdata = modelsuser.UserData{
 		Id:          userdata.Id,
 		Nickname:    data["fullname"],
 		Firstname: 	data["firstname"],
@@ -79,6 +79,9 @@ func UpdateDataUser(c *fiber.Ctx) error {
 		Address:     data["address"],
 		Dateofbirth: dateInput,
 		Nationality: data["nationality"],
+		Saldo: 	userdata.Saldo,
+		Wishlist: 	userdata.Wishlist,
+		Purchased: userdata.Purchased,
 		Created_at:  userdata.Created_at,
 		Updated_at:  time.Now().UnixMilli(),
 		Deleted_at:  userdata.Deleted_at,
