@@ -1,6 +1,7 @@
 package config
 
 import (
+	modelcomp "account-selling/models/complain"
 	modelitems "account-selling/models/items"
 	modeltransact "account-selling/models/transaction"
 	modelsuser "account-selling/models/user"
@@ -37,4 +38,6 @@ func AutoMigration(con *gorm.DB){
 	con.AutoMigrate(&modelitems.Items{})
 	
 	con.AutoMigrate(&modeltransact.Transaction{})
+	
+	con.AutoMigrate(&modelcomp.Complain{})
 }
