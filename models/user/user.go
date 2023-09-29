@@ -6,6 +6,7 @@ type User struct {
 	Password   []byte `json:"-"`
 	Email      string `gorm:"unique" json:"email"`
 	UData_id   int    `json:"udata_id"`
+	Lastlogin  int64  `json:"lastlogin"`
 	Created_at int64  `json:"created_at"`
 	Updated_at int64  `json:"updated_at"`
 	Deleted_at int64  `json:"deleted_at"`

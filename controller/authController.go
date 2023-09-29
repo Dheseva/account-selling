@@ -34,6 +34,7 @@ func Register(c *fiber.Ctx) error {
 		Password: password,
 		Email: data["email"],
 		UData_id: int(userdata.Id),
+		Lastlogin: time.Now().UnixMilli(),
 		Created_at: time.Now().UnixMilli(),
 		Updated_at: time.Now().UnixMilli(),
 	}
@@ -109,6 +110,19 @@ func Login(c *fiber.Ctx) error {
 			},
 		})
 	}
+
+	loginupdate := modelsuser.User{
+		Id: user.Id,
+		Name: user.Name,
+		Password: user.Password,
+		Email: user.Email,
+		UData_id: user.UData_id,
+		Lastlogin: time.Now().UnixMilli(),
+		Created_at: user.Created_at,
+		Updated_at: time.Now().UnixMilli(),
+		Deleted_at: user.Deleted_at,
+	}
+	config.DB.Save(&loginupdate)
 
 	cookie := fiber.Cookie{
 		Name: "jwt",
