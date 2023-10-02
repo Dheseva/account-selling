@@ -98,3 +98,70 @@ func UpdateDataUser(c *fiber.Ctx) error {
 		},
 	})
 }
+
+func DeleteDataUser(c *fiber.Ctx) error {
+
+	cookie := c.Cookies("jwt")
+	standClaims := &middleware.MyCustomClaims{}
+	convKey := []byte(Secretkey)
+	token, err := jwt.ParseWithClaims(cookie, standClaims, func(t *jwt.Token) (interface{}, error) {
+		return convKey, nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"error":   err.Error(),
+			"message": "unauthenticated user",
+		})
+	}
+
+	claims := token.Claims.(*middleware.MyCustomClaims)
+
+	var user modelsuser.User
+	config.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	var userdata modelsuser.UserData
+	config.DB.Where("id = ?", user.UData_id).First(&userdata)
+
+	userdata = modelsuser.UserData{
+		Id:          userdata.Id,
+		Nickname:    userdata.Nickname,
+		Firstname: 	userdata.Firstname,
+		Lastname: 	userdata.Lastname,
+		Sex:         userdata.Sex,
+		Address:    userdata.Address,
+		Dateofbirth: userdata.Dateofbirth,
+		Nationality: userdata.Nationality,
+		Saldo: 	userdata.Saldo,
+		Wishlist: 	userdata.Wishlist,
+		Purchased: userdata.Purchased,
+		Created_at:  userdata.Created_at,
+		Updated_at:  time.Now().UnixMilli(),
+		Deleted_at:  time.Now().UnixMilli(),
+	}
+	config.DB.Save(&userdata)
+
+	user = modelsuser.User{
+		Id: user.Id,
+		Name: user.Name,
+		Password: user.Password,
+		Email: user.Email,
+		UData_id: user.UData_id,
+		Lastlogin: user.Lastlogin,
+		Created_at: user.Created_at,
+		Updated_at: time.Now().UnixMilli(),
+		Deleted_at: time.Now().UnixMilli(),
+	}
+	config.DB.Save(&user)
+
+	return c.JSON(fiber.Map{
+		"status":  true,
+		"message": "success update data user",
+		"data": fiber.Map{
+			"user":      user,
+			"user_data": userdata,
+		},
+	})
+}

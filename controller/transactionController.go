@@ -85,6 +85,8 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	id := c.Params("id")
 	idInt, err := strconv.Atoi(id)
 
+	status, _ := strconv.Atoi(data["status"])
+
 	if err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
@@ -122,20 +124,21 @@ func UpdateTransaction(c *fiber.Ctx) error {
 	config.DB.Where("id = ?", transac.Items_id).First(&item)
 
 	transac = modelTrasac.Transaction{
-		Items_id: int(item.Id),
-		Selluser_id: item.User_id,
-		Buyuser_id: int(user.Id),
-		Price: item.Price,
+		Id: transac.Id,
+		Items_id: transac.Items_id,
+		Selluser_id: transac.Selluser_id,
+		Buyuser_id: transac.Buyuser_id,
+		Price: transac.Price,
 		Comment: data["comment"],
-		Status: 1,
+		Status: status,
 		Created_at: time.Now().UnixMilli(),
 		Updated_at: time.Now().UnixMilli(),
 	}
-	config.DB.Create(&transac)
+	config.DB.Save(&transac)
 
 	return c.JSON(fiber.Map{
 		"status":  true,
-		"message": "success register data",
+		"message": "success update data",
 		"data":    transac,
 	})
 }
