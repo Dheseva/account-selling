@@ -131,3 +131,60 @@ func UpdateComplain(c *fiber.Ctx) error {
 		"data": complen,
 	})
 }
+
+func DeleteComplain(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"status": false,
+			"message": "invalid request",
+			"data": nil,
+		})
+	}
+
+	cookie := c.Cookies("jwt")
+	standClaims := &middleware.MyCustomClaims{}
+	convKey := []byte(Secretkey)
+	token, err := jwt.ParseWithClaims(cookie, standClaims, func(t *jwt.Token) (interface{}, error) {
+		return convKey, nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"error":   err.Error(),
+			"message": "unauthenticated user",
+		})
+	}
+
+	claims := token.Claims.(*middleware.MyCustomClaims)
+
+	var user modelsuser.User
+	config.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	var idcomplain modelcom.Complain
+	config.DB.Where("id = ?", idInt).First(&idcomplain)
+
+	complen := modelcom.Complain{
+		Id: idcomplain.Id,
+		Items_id: idcomplain.Items_id,
+		User_id: idcomplain.User_id,
+		Complain: idcomplain.Complain,
+		Status: idcomplain.Status,
+		Created_at: idcomplain.Created_at,
+		Updated_at: time.Now().UnixMilli(),
+		Deleted_at: time.Now().UnixMilli(),
+	}
+	config.DB.Save(&complen)
+
+	return c.JSON(fiber.Map{
+		"status":  true,
+		"message": "success register data",
+		"data": complen,
+	})
+}
