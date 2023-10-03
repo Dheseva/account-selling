@@ -1,5 +1,5 @@
 # account-selling
-Practice project 
+Practice project with Go lang
 
 ---
 
