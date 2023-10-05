@@ -1,24 +1,94 @@
 package service
 
-import "account-selling/config"
+import (
+	"account-selling/config"
+	"account-selling/helper"
+	"account-selling/middleware"
+	modelsitem "account-selling/models/items"
+	modelsuser "account-selling/models/user"
+	"strconv"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
+)
 
 type ItemService struct {
 	// Implementasi sesuai kebutuhan Anda
-	DB Database
+	DB ItemServices
 }
 
-func NewItemService(db Database) *ItemService {
+func NewItemService(db ItemServices) *ItemService {
     return &ItemService{DB: db}
 }
 
-func (db *ItemService) Create(data interface{}) error {
+func (db *ItemService) Create(c *fiber.Ctx, data interface{}) error {
+	var datas map[string]string
+
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	Secretkey := helper.PrivateKey()
+
+	cookie := c.Cookies("jwt")
+	standClaims := &middleware.MyCustomClaims{}
+	convKey := []byte(Secretkey)
+	token, err := jwt.ParseWithClaims(cookie, standClaims, func(t *jwt.Token) (interface{}, error) {
+		return convKey, nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"error":   err.Error(),
+			"message": "unauthenticated user",
+		})
+	}
+
+	claims := token.Claims.(*middleware.MyCustomClaims)
+
+	var user modelsuser.User
+	config.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	stockitem, _ := strconv.Atoi(datas["stock"])
+	itemdata := modelsitem.ItemData{
+		Type: datas["type"],
+		Stock: stockitem,
+		Desc: datas["desc"],
+		Created_at: time.Now().UnixMilli(),
+		Updated_at: time.Now().UnixMilli(),
+	}
+	config.DB.Create(&itemdata)
+
+	priceitem, _ := strconv.ParseInt(datas["price"], 10, 64)
+	item := modelsitem.Items{
+		Name: datas["name"],
+		Price: priceitem,
+		Itemdata_id: int(itemdata.Id),
+		User_id: int(user.Id),
+		Created_at: time.Now().UnixMilli(),
+		Updated_at: time.Now().UnixMilli(),
+	}
+	config.DB.Create(&item)
+
+	// return c.JSON(fiber.Map{
+	// 	"status": true,
+	// 	"message": "success register data",
+	// 	"data": fiber.Map{
+	// 		"item": item,
+	// 		"item_data": itemdata,
+	// 	},
+	// })
 	return config.DB.Create(data).Error
 }
 
-func (db *ItemService) Where(query interface{}, args ...interface{}) Database {
-	return db // Implementasi sesuai kebutuhan Anda
-}
+// func (db *ItemService) Where(query interface{}, args ...interface{}) ItemServices {
+	
+// 	return db // Implementasi sesuai kebutuhan Anda
+// }
 
-func (db *ItemService) First(out interface{}, where ...interface{}) Database {
-	return db // Implementasi sesuai kebutuhan Anda
-}
+// func (db *ItemService) First(out interface{}, where ...interface{}) ItemServices {
+// 	return db // Implementasi sesuai kebutuhan Anda
+// }
