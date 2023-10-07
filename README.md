@@ -11,5 +11,4 @@ CRUD with authentication
 - Gorm ORM
 - JWT middleware
 - Mysql
-- Clean Architecture
 - Google Wire Injection
