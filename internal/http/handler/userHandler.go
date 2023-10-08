@@ -8,12 +8,14 @@ import (
 )
 
 type RegisterHandler struct {
-	RegisterUseCase *service.RegisterUserUseCase
+	RegisterUserUC *service.RegisterUserUseCase
+	RegisterUserdataUC *service.RegisterUserDataUsecase
 }
 
-func NewRegisterHandler(registerUC *service.RegisterUserUseCase) *RegisterHandler {
+func NewRegisterHandler(registerUUC *service.RegisterUserUseCase, registerUDUC *service.RegisterUserDataUsecase) *RegisterHandler {
 	return &RegisterHandler{
-		RegisterUseCase: registerUC,
+		RegisterUserUC: registerUUC,
+		RegisterUserdataUC: registerUDUC,
 	}
 }
 
@@ -32,8 +34,14 @@ func (h *RegisterHandler) RegisterUser(c *fiber.Ctx) error {
 		})
 	}
 
+	 userdata,err := h.RegisterUserdataUC.Execute(userdata,data); 
+	 if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Registration failed",
+		})
+	}
 	// Panggil Use Case untuk registrasi
-	if err := h.RegisterUseCase.Execute(user,userdata,data); err != nil {
+	if err := h.RegisterUserUC.Execute(user,userdata,data); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Registration failed",
 		})
