@@ -1,10 +1,7 @@
 package config
 
 import (
-	modelcomp "account-selling/models/complain"
-	modelitems "account-selling/models/items"
-	modeltransact "account-selling/models/transaction"
-	modelsuser "account-selling/models/user"
+	"account-selling/internal/entity"
 	"fmt"
 	"os"
 
@@ -27,17 +24,11 @@ panic("Cannot connect to the database")
 }
 
 DB = connection
-AutoMigration(connection)
+autoMigration(connection)
 }
 
-func AutoMigration(con *gorm.DB){
+func autoMigration(con *gorm.DB){
 
-	con.AutoMigrate(&modelsuser.User{})
-	con.AutoMigrate(&modelsuser.UserData{})
-
-	con.AutoMigrate(&modelitems.Items{})
-	
-	con.AutoMigrate(&modeltransact.Transaction{})
-	
-	con.AutoMigrate(&modelcomp.Complain{})
+	con.AutoMigrate(&entity.User{})
+	con.AutoMigrate(&entity.UserData{})
 }
