@@ -2,6 +2,7 @@ package routes
 
 import (
 	"account-selling/controller"
+	handler "account-selling/internal/http/handler"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -10,7 +11,7 @@ import (
 func Setup(app *fiber.App) {
 	app.Use(logger.New())
 
-	app.Post("/api/register",controller.Register)
+	app.Post("/api/register",handler.RegisterUser)
 	app.Post("/api/login", controller.Login)
 	app.Get("/api/user", controller.User)
 	app.Get("/api/user/:id", controller.UpdateDataUser)

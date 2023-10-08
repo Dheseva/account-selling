@@ -1,7 +1,6 @@
 package service
 
 import (
-	"account-selling/config"
 	"account-selling/internal/entity"
 	"account-selling/internal/repository"
 	"time"
@@ -11,24 +10,15 @@ import (
 
 type RegisterUserUseCase struct {
 	UserRepository repository.UserRepository
-	UserDataRepository repository.UserDataRepository
 }
 
-func NewRegisterUserUseCase(userRepo repository.UserRepository, userdataRepo repository.UserDataRepository) *RegisterUserUseCase {
+func NewRegisterUserUseCase(userRepo repository.UserRepository) *RegisterUserUseCase {
 	return &RegisterUserUseCase{
 		UserRepository: userRepo,
-		UserDataRepository: userdataRepo,
 	}
 }
 
 func (uc *RegisterUserUseCase) Execute(user *entity.User, userdata *entity.UserData, data map[string]string) error {
-
-	userdata.Nickname = data["name"]
-	userdata.Created_at = time.Now().UnixMilli()
-	userdata.Updated_at = time.Now().UnixMilli()
-	if err := config.DB.Create(&userdata).Error; err != nil {
-		return err
-	}
 
 	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
@@ -38,9 +28,9 @@ func (uc *RegisterUserUseCase) Execute(user *entity.User, userdata *entity.UserD
 	user.Lastlogin = time.Now().UnixMilli()
 	user.Created_at = time.Now().UnixMilli()
 	user.Updated_at = time.Now().UnixMilli()
-	if err := config.DB.Create(&user).Error; err != nil {
+	if err := uc.UserRepository.Create(user); err != nil {
 		return err
 	}
 
-	return uc.UserRepository.Create(user)
+	return nil
 }
