@@ -3,9 +3,8 @@ package service
 import (
 	"account-selling/config"
 	"account-selling/helper"
-	"account-selling/middleware"
-	modelsitem "account-selling/models/items"
-	modelsuser "account-selling/models/user"
+	"account-selling/internal/entity"
+	"account-selling/internal/http/middleware"
 	"strconv"
 	"time"
 
@@ -49,11 +48,11 @@ func (db *ItemService) Create(c *fiber.Ctx) error {
 
 	claims := token.Claims.(*middleware.MyCustomClaims)
 
-	var user modelsuser.User
+	var user entity.User
 	config.DB.Where("id = ?", claims.Issuer).First(&user)
 
 	stockitem, _ := strconv.Atoi(data["stock"])
-	itemdata := modelsitem.ItemData{
+	itemdata := entity.ItemData{
 		Type: data["type"],
 		Stock: stockitem,
 		Desc: data["desc"],
@@ -63,7 +62,7 @@ func (db *ItemService) Create(c *fiber.Ctx) error {
 	config.DB.Create(&itemdata)
 
 	priceitem, _ := strconv.ParseInt(data["price"], 10, 64)
-	item := modelsitem.Items{
+	item := entity.Items{
 		Name: data["name"],
 		Price: priceitem,
 		Itemdata_id: int(itemdata.Id),
