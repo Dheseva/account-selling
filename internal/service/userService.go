@@ -1,6 +1,7 @@
 package service
 
 import (
+	bcrypt "account-selling/helper/bcrypt"
 	"account-selling/internal/entity"
 	"account-selling/internal/repository"
 	"time"
@@ -20,7 +21,8 @@ func NewRegisterUserUseCase(userRepo repository.UserRepository) *RegisterUserUse
 
 func (uc *RegisterUserUseCase) Execute(user *entity.User, userdata *entity.UserData, data map[string]string) error {
 
-	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
+	password, _ := bcrypt.PasswordHash(data["password"])
+	// password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
 
 	user.Name = data["name"]
 	user.Password = password
