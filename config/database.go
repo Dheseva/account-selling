@@ -1,7 +1,7 @@
 package config
 
 import (
-	"account-selling/internal/entity"
+	modelsuser "account-selling/models/user"
 	"fmt"
 	"os"
 
@@ -29,6 +29,6 @@ autoMigration(connection)
 
 func autoMigration(con *gorm.DB){
 
-	con.AutoMigrate(&entity.User{})
-	con.AutoMigrate(&entity.UserData{})
+	con.AutoMigrate(&modelsuser.User{})
+	con.AutoMigrate(&modelsuser.UserData{})
 }

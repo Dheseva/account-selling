@@ -1,12 +1,10 @@
 package service
 
 import (
-	bcrypt "account-selling/helper/bcrypt"
+	bc "account-selling/helper/bcrypt"
 	"account-selling/internal/entity"
 	"account-selling/internal/repository"
 	"time"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type RegisterUserUseCase struct {
@@ -21,8 +19,7 @@ func NewRegisterUserUseCase(userRepo repository.UserRepository) *RegisterUserUse
 
 func (uc *RegisterUserUseCase) Execute(user *entity.User, userdata *entity.UserData, data map[string]string) error {
 
-	password, _ := bcrypt.PasswordHash(data["password"])
-	// password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
+	password, _ := bc.PasswordHash(data["password"])
 
 	user.Name = data["name"]
 	user.Password = password
