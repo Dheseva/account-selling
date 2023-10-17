@@ -2,8 +2,9 @@ package controller
 
 import (
 	"account-selling/config"
+	bc "account-selling/helper/bcrypt"
 	"account-selling/internal/http/middleware"
-	modelsuser "account-selling/models/user"
+	models "account-selling/models/user"
 	"os"
 	"strconv"
 	"time"
@@ -21,15 +22,23 @@ func Register(c *fiber.Ctx) error {
 	if err := c.BodyParser(&data); err != nil {
 		return err
 	}
-	userdata := modelsuser.UserData{
+	userdata := models.UserData{
 		Nickname: data["name"],
-		Created_at: time.Now().UnixMilli(),
-		Updated_at: time.Now().UnixMilli(),
+		Created_at: time.Now().UnixNano() / 1e6,
+		Updated_at: time.Now().UnixNano() / 1e6,
 	}
 	config.DB.Create(&userdata)
 
-	password, _ := bcrypt.GenerateFromPassword([]byte(data["password"]), 14)
-	user := modelsuser.User{
+
+	password, err := bc.PasswordHash(data["password"])
+	if err != nil {
+		return c.JSON(fiber.Map{
+			"status": false,
+			"message": "failed hash password",
+			"data": nil,
+		})
+	}
+	user := models.User{
 		Name: data["name"],
 		Password: password,
 		Email: data["email"],
@@ -38,9 +47,8 @@ func Register(c *fiber.Ctx) error {
 		Created_at: time.Now().UnixMilli(),
 		Updated_at: time.Now().UnixMilli(),
 	}
-	
-
 	config.DB.Create(&user)
+
 	return c.JSON(fiber.Map{
 		"status": true,
 		"message": "success register data",
@@ -58,7 +66,7 @@ func Login(c *fiber.Ctx) error {
 		return err
 	}
 
-	var user modelsuser.User
+	var user models.User
 
 	config.DB.Where("email = ?", data["email"]).First(&user)
 
@@ -80,7 +88,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	var userdata modelsuser.UserData
+	var userdata models.UserData
 	config.DB.Where("id = ?", user.UData_id).First(&userdata)
 	convKey := []byte(Secretkey)
 
@@ -111,7 +119,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	loginupdate := modelsuser.User{
+	loginupdate := models.User{
 		Id: user.Id,
 		Name: user.Name,
 		Password: user.Password,
@@ -163,10 +171,10 @@ func User (c *fiber.Ctx) error{
 
 	claims := token.Claims.(*middleware.MyCustomClaims)
 
-	var user modelsuser.User
+	var user models.User
 	config.DB.Where("id = ?",claims.Issuer).First(&user)
 
-	var userdata modelsuser.UserData
+	var userdata models.UserData
 	config.DB.Where("id = ?", user.UData_id).First(&userdata)
 
 	return c.JSON(fiber.Map{

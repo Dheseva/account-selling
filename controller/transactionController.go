@@ -2,7 +2,7 @@ package controller
 
 import (
 	"account-selling/config"
-	"account-selling/middleware"
+	"account-selling/internal/http/middleware"
 	modelitem "account-selling/models/items"
 	modelTrasac "account-selling/models/transaction"
 	modelsuser "account-selling/models/user"

@@ -2,7 +2,7 @@ package controller
 
 import (
 	"account-selling/config"
-	"account-selling/middleware"
+	"account-selling/internal/http/middleware"
 	modelsuser "account-selling/models/user"
 	"strconv"
 	"time"
