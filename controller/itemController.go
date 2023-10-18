@@ -63,7 +63,7 @@ func AddItems(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"status": true,
-		"message": "success register data",
+		"message": "success register item data",
 		"data": fiber.Map{
 			"item": item,
 			"item_data": itemdata,

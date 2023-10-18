@@ -17,7 +17,7 @@ type UserData struct {
 	Nickname    string `json:"nickname"`
 	Firstname   string `json:"firstname"`
 	Lastname    string `json:"lastname"`
-	Sex         string `json:"sex" gorm:"type:char(1);check:sex in ('M','F','O')"`
+	Sex         string `json:"sex" gorm:"type:char(1)"`
 	Address     string `json:"address"`
 	Dateofbirth int64  `json:"dateofbirth"`
 	Nationality string `json:"nationality"`

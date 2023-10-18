@@ -72,7 +72,7 @@ func UpdateDataUser(c *fiber.Ctx) error {
 
 	userdata = modelsuser.UserData{
 		Id:          userdata.Id,
-		Nickname:    data["fullname"],
+		Nickname:    data["nickname"],
 		Firstname: 	data["firstname"],
 		Lastname: 	data["lastname"],
 		Sex:         data["sex"],
@@ -158,7 +158,7 @@ func DeleteDataUser(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"status":  true,
-		"message": "success update data user",
+		"message": "success delete data user",
 		"data": fiber.Map{
 			"user":      user,
 			"user_data": userdata,
