@@ -13,20 +13,20 @@ type User struct {
 }
 
 type UserData struct {
-	Id          uint    `json:"id"`
-	Nickname    string  `json:"nickname"`
-	Firstname   string  `json:"firstname"`
-	Lastname    string  `json:"lastname"`
-	Sex         string  `json:"sex"`
-	Address     string  `json:"address"`
-	Dateofbirth int64   `json:"dateofbirth"`
-	Nationality string  `json:"nationality"`
-	Saldo       int64   `json:"saldo"`
-	Wishlist    []int64 `json:"wishlist"`
-	Purchased   []int64 `json:"purchased"`
-	Created_at  int64   `json:"created_at"`
-	Updated_at  int64   `json:"updated_at"`
-	Deleted_at  int64   `json:"deleted_at"`
+	Id          uint   `json:"id"`
+	Nickname    string `json:"nickname"`
+	Firstname   string `json:"firstname"`
+	Lastname    string `json:"lastname"`
+	Sex         string `json:"sex" gorm:"type:char(1);check:sex in ('M','F','O')"`
+	Address     string `json:"address"`
+	Dateofbirth int64  `json:"dateofbirth"`
+	Nationality string `json:"nationality"`
+	Saldo       int64  `json:"saldo"`
+	Wishlist    []int  `json:"wishlist" gorm:"type:json"`
+	Purchased   []int  `json:"purchased" gorm:"type:json"`
+	Created_at  int64  `json:"created_at"`
+	Updated_at  int64  `json:"updated_at"`
+	Deleted_at  int64  `json:"deleted_at"`
 }
 
 // func (user *User) RegisterUser() {
