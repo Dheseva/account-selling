@@ -11,4 +11,4 @@ CRUD with authentication
 - Gorm ORM
 - JWT middleware
 - Mysql
-- Clean Ars
+- MVC
