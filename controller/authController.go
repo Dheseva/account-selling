@@ -11,7 +11,6 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var Secretkey = os.Getenv("PRIVATE_KEY_JWT")
@@ -79,7 +78,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(data["password"])); err != nil{
+	if err := bc.ValidateHash(user.Password, []byte(data["password"])); err != nil{
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
 			"status": false,
