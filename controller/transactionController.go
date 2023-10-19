@@ -56,6 +56,20 @@ func AddTransaction(c *fiber.Ctx) error {
 	var item modelitem.Items
 	config.DB.Where("id = ?", idInt).First(&item)
 
+	var userdata modelsuser.UserData
+	config.DB.Where("id = ?", user.UData_id).First(&userdata)
+
+	if item.Price > userdata.Saldo {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"message": "saldo tidak cukup",
+			"data": userdata.Saldo,
+		})
+	}
+
+	total := userdata.Saldo - item.Price
+
 	transac := modelTrasac.Transaction{
 		Items_id: int(item.Id),
 		Selluser_id: item.User_id,
@@ -68,9 +82,34 @@ func AddTransaction(c *fiber.Ctx) error {
 	}
 	config.DB.Create(&transac)
 
+	var datapur []int
+	if userdata.Purchased != nil {
+		datapur = append(userdata.Purchased, int(item.Id))
+	}else{
+		datapur = append(datapur, int(item.Id))
+	}
+
+	userdata = modelsuser.UserData{
+		Id:          userdata.Id,
+		Nickname:    userdata.Nickname,
+		Firstname: 	userdata.Firstname,
+		Lastname: 	userdata.Lastname,
+		Sex:         userdata.Sex,
+		Address:    userdata.Address,
+		Dateofbirth: userdata.Dateofbirth,
+		Nationality: userdata.Nationality,
+		Saldo: 	total,
+		Wishlist: 	userdata.Wishlist,
+		Purchased: datapur,
+		Created_at:  userdata.Created_at,
+		Updated_at:  time.Now().UnixMilli(),
+		Deleted_at:  time.Now().UnixMilli(),
+	}
+	config.DB.Save(&userdata)
+
 	return c.JSON(fiber.Map{
 		"status":  true,
-		"message": "success register data",
+		"message": "success transaction data",
 		"data":    transac,
 	})
 }

@@ -22,7 +22,8 @@ func apiUsers(app *fiber.App){
 	app.Post("/api/login", controller.Login)
 	app.Get("/api/user", controller.User)
 	app.Get("/api/user/:id", controller.UpdateDataUser)
-	app.Post("/api/userdelete", controller.DeleteDataUser)
+	app.Post("/api/user/topup", controller.TopupUser)
+	app.Post("/api/user/delete", controller.DeleteDataUser)
 	app.Post("/api/logout", controller.Logout)
 }
 
