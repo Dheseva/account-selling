@@ -22,8 +22,6 @@ type UserData struct {
 	Dateofbirth int64  `json:"dateofbirth"`
 	Nationality string `json:"nationality"`
 	Saldo       int64  `json:"saldo"`
-	Wishlist    []int  `json:"wishlist" gorm:"type:json"`
-	Purchased   []int  `json:"purchased" gorm:"type:json"`
 	Created_at  int64  `json:"created_at"`
 	Updated_at  int64  `json:"updated_at"`
 	Deleted_at  int64  `json:"deleted_at"`

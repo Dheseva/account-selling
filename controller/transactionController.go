@@ -82,13 +82,6 @@ func AddTransaction(c *fiber.Ctx) error {
 	}
 	config.DB.Create(&transac)
 
-	var datapur []int
-	if userdata.Purchased != nil {
-		datapur = append(userdata.Purchased, int(item.Id))
-	}else{
-		datapur = append(datapur, int(item.Id))
-	}
-
 	userdata = modelsuser.UserData{
 		Id:          userdata.Id,
 		Nickname:    userdata.Nickname,
@@ -99,8 +92,6 @@ func AddTransaction(c *fiber.Ctx) error {
 		Dateofbirth: userdata.Dateofbirth,
 		Nationality: userdata.Nationality,
 		Saldo: 	total,
-		Wishlist: 	userdata.Wishlist,
-		Purchased: datapur,
 		Created_at:  userdata.Created_at,
 		Updated_at:  time.Now().UnixMilli(),
 		Deleted_at:  time.Now().UnixMilli(),
