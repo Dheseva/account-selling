@@ -1,4 +1,4 @@
-package wishlist
+package models
 
 type Wishlist struct {
 	Id         uint  `json:"id"`
