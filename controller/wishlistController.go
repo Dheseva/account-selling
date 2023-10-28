@@ -62,6 +62,39 @@ func AddWishlist(c *fiber.Ctx) error {
 	})
 }
 
+func ShowWishlist(c *fiber.Ctx) error {
+
+	cookie := c.Cookies("jwt")
+	standClaims := &middleware.MyCustomClaims{}
+	convKey := []byte(Secretkey)
+	token, err := jwt.ParseWithClaims(cookie, standClaims, func(t *jwt.Token) (interface{}, error) {
+		return convKey, nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"error":   err.Error(),
+			"message": "unauthenticated user",
+		})
+	}
+
+	claims := token.Claims.(*middleware.MyCustomClaims)
+
+	var user modelsuser.User
+	config.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	var wish []modelwish.Wishlist
+	config.DB.Where("user_id = ?", user.Id).Find(&wish)
+
+	return c.JSON(fiber.Map{
+		"status":  true,
+		"message": "success remove wishlist",
+		"data":  wish,
+	})
+}
+
 func RemoveWishlist(c *fiber.Ctx) error {
 
 	id := c.Params("id")
