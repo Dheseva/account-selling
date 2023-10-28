@@ -5,6 +5,7 @@ import (
 	modelitem "account-selling/models/items"
 	modelstrans "account-selling/models/transaction"
 	modelsuser "account-selling/models/user"
+	modelswish "account-selling/models/wishlist"
 	"fmt"
 	"os"
 
@@ -41,4 +42,6 @@ func autoMigration(con *gorm.DB){
 	con.AutoMigrate(&modelscom.Complain{})
 
 	con.AutoMigrate(&modelstrans.Transaction{})
+
+	con.AutoMigrate(&modelswish.Wishlist{})
 }
