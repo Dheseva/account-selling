@@ -36,10 +36,12 @@ func apiItems(app *fiber.App){
 func apiTransac(app *fiber.App){
 	app.Get("/api/transaction/:id", controller.AddTransaction)
 	app.Get("/api/transactions/:id", controller.UpdateTransaction)
+	app.Get("/api/transaction/:id", controller.ShowTransaction)
 }
 
 func apiComplain(app *fiber.App){
 	app.Post("/api/complain", controller.AddComplain)
 	app.Get("/api/complain/:id", controller.UpdateComplain)
 	app.Post("/api/complains/:id", controller.DeleteComplain)
+	app.Post("/api/complains/:id", controller.ShowWishlist)
 }
