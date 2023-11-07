@@ -14,6 +14,7 @@ func Setup(app *fiber.App) {
 	apiItems(app)
 	apiTransac(app)
 	apiComplain(app)
+	apiWishlist(app)
 
 }
 
@@ -44,4 +45,8 @@ func apiComplain(app *fiber.App){
 	app.Get("/api/complain/:id", controller.UpdateComplain)
 	app.Post("/api/complains/:id", controller.DeleteComplain)
 	app.Post("/api/complains/:id", controller.ShowWishlist)
+}
+
+func apiWishlist(app *fiber.App){
+	app.Post("/api/wishlist", controller.ShowWishlist)
 }
