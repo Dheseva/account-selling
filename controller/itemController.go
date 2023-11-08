@@ -222,3 +222,84 @@ func DeleteItems(c *fiber.Ctx) error {
 		},
 	})
 }
+
+func ShowItems(c *fiber.Ctx) error {
+
+	cookie := c.Cookies("jwt")
+	standClaims := &middleware.MyCustomClaims{}
+	convKey := []byte(Secretkey)
+	token, err := jwt.ParseWithClaims(cookie, standClaims, func(t *jwt.Token) (interface{}, error) {
+		return convKey, nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"error":   err.Error(),
+			"message": "unauthenticated user",
+		})
+	}
+
+	claims := token.Claims.(*middleware.MyCustomClaims)
+
+	var user modelsuser.User
+	config.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	var items []modelsitem.Items
+	config.DB.Where("id = ?", user.Id).Find(&items)
+
+	return c.JSON(fiber.Map{
+		"status":  true,
+		"message": "success remove wishlist",
+		"data":  items,
+	})
+}
+
+func ShowByidItem(c *fiber.Ctx) error {
+
+	id := c.Params("id")
+	idInt, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"message": "invalid request",
+			"data":    nil,
+		})
+	}
+
+	cookie := c.Cookies("jwt")
+	standClaims := &middleware.MyCustomClaims{}
+	convKey := []byte(Secretkey)
+	token, err := jwt.ParseWithClaims(cookie, standClaims, func(t *jwt.Token) (interface{}, error) {
+		return convKey, nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"error":   err.Error(),
+			"message": "unauthenticated user",
+		})
+	}
+
+	claims := token.Claims.(*middleware.MyCustomClaims)
+
+	var user modelsuser.User
+	config.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	var item modelsitem.ItemData
+	config.DB.Where("id = ?", idInt).Find(&item)
+
+	var items modelsitem.ItemData
+	config.DB.Where("id = ?", item.Id).Find(&items)
+
+	return c.JSON(fiber.Map{
+		"status":  true,
+		"message": "success remove wishlist",
+		"data":  items,
+	})
+}
