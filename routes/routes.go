@@ -48,5 +48,6 @@ func apiComplain(app *fiber.App){
 }
 
 func apiWishlist(app *fiber.App){
-	app.Post("/api/wishlist", controller.ShowWishlist)
+	app.Post("/api/item/:id/wishlist", controller.AddWishlist)
+	app.Post("/api/user/wishlist", controller.ShowWishlist)
 }
