@@ -225,3 +225,36 @@ func DeleteDataUser(c *fiber.Ctx) error {
 		},
 	})
 }
+
+func ShowallUser(c *fiber.Ctx) error {
+
+	cookie := c.Cookies("jwt")
+	standClaims := &middleware.MyCustomClaims{}
+	convKey := []byte(Secretkey)
+	token, err := jwt.ParseWithClaims(cookie, standClaims, func(t *jwt.Token) (interface{}, error) {
+		return convKey, nil
+	})
+
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"status":  false,
+			"error":   err.Error(),
+			"message": "unauthenticated user",
+		})
+	}
+
+	claims := token.Claims.(*middleware.MyCustomClaims)
+
+	var user modelsuser.User
+	config.DB.Where("id = ?", claims.Issuer).First(&user)
+
+	var alluser []modelsuser.User
+	config.DB.Find(&alluser)
+
+	return c.JSON(fiber.Map{
+		"status":  true,
+		"message": "success remove wishlist",
+		"data":  alluser,
+	})
+}

@@ -247,7 +247,7 @@ func ShowItems(c *fiber.Ctx) error {
 	config.DB.Where("id = ?", claims.Issuer).First(&user)
 
 	var items []modelsitem.Items
-	config.DB.Where("id = ?", user.Id).Find(&items)
+	config.DB.Find(&items)
 
 	return c.JSON(fiber.Map{
 		"status":  true,
