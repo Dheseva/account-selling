@@ -26,12 +26,15 @@ func apiUsers(app *fiber.App){
 	app.Post("/api/user/topup", controller.TopupUser)
 	app.Post("/api/user/delete", controller.DeleteDataUser)
 	app.Post("/api/logout", controller.Logout)
+	app.Get("/api/users", controller.ShowallUser)
 }
 
 func apiItems(app *fiber.App){
 	app.Post("/api/item", controller.AddItems)
 	app.Get("/api/item/:id", controller.UpdateItems)
-	app.Post("/api/items/:id", controller.DeleteItems)
+	app.Post("/api/item/:id", controller.DeleteItems)
+	app.Get("/api/items", controller.ShowItems)
+	app.Get("/api/items/:id", controller.ShowByidItem)
 }
 
 func apiTransac(app *fiber.App){
@@ -44,10 +47,10 @@ func apiComplain(app *fiber.App){
 	app.Post("/api/complain", controller.AddComplain)
 	app.Get("/api/complain/:id", controller.UpdateComplain)
 	app.Post("/api/complains/:id", controller.DeleteComplain)
-	app.Post("/api/complains/:id", controller.ShowWishlist)
+	app.Get("/api/complains/:id", controller.ShowWishlist)
 }
 
 func apiWishlist(app *fiber.App){
 	app.Post("/api/item/:id/wishlist", controller.AddWishlist)
-	app.Post("/api/user/wishlist", controller.ShowWishlist)
+	app.Get("/api/user/wishlist", controller.ShowWishlist)
 }
