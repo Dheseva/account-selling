@@ -19,7 +19,7 @@ func Setup(app *fiber.App) {
 }
 
 func apiUsers(app *fiber.App){
-	app.Post("/api/register", controller.Register) // how to fix dis, helpme
+	app.Post("/api/register", controller.Register)
 	app.Post("/api/login", controller.Login)
 	app.Get("/api/user", controller.User)
 	app.Get("/api/user/:id", controller.UpdateDataUser)
