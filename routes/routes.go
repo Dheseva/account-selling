@@ -10,6 +10,8 @@ import (
 func Setup(app *fiber.App) {
 	app.Use(logger.New())
 
+	app.Get("/", controller.Home)
+
 	apiUsers(app)
 	apiItems(app)
 	apiTransac(app)
