@@ -22,6 +22,8 @@ func main() {
 	app := fiber.New(fiber.Config{
         Views: engine,
     })
+
+	app.Static("/public", "./public")
 	app.Use(cors.New(cors.Config{
 		AllowCredentials: true,
 	}))
