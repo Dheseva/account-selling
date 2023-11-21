@@ -47,3 +47,4 @@ func LoadEnv(){
 		log.Fatal("Error load .env file")
 	}
 }
+

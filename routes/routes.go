@@ -10,8 +10,7 @@ import (
 func Setup(app *fiber.App) {
 	app.Use(logger.New())
 
-	app.Get("/", controller.Home)
-
+	frontendRoutes(app)
 	apiUsers(app)
 	apiItems(app)
 	apiTransac(app)
@@ -55,4 +54,15 @@ func apiComplain(app *fiber.App){
 func apiWishlist(app *fiber.App){
 	app.Post("/api/item/:id/wishlist", controller.AddWishlist)
 	app.Get("/api/user/wishlist", controller.ShowWishlist)
+}
+
+func frontendRoutes(app *fiber.App){
+	frontendRoutes := []string{
+		"/",
+		"/about",
+	}
+
+	for _, route := range frontendRoutes{
+		app.Get(route, controller.Home)
+	}
 }
