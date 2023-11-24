@@ -40,6 +40,9 @@ const Homepage: React.FC = () => {
         <Link to="/about">
           <FontAwesomeIcon icon={faInfoCircle} />
         </Link>
+        <Link to="/login">
+          <FontAwesomeIcon icon={faInfoCircle} />
+        </Link>
       </div>
     </Container>
   );
