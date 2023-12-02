@@ -13,5 +13,7 @@ CRUD with authentication
 - Mysql
 - MVC
 
-(Frontend Reactjs Incomplete)
-(Backend Golang Complete)
+---
+
+//(Frontend Reactjs Incomplete)
+//(Backend Golang Complete)
