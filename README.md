@@ -12,3 +12,6 @@ CRUD with authentication
 - JWT middleware
 - Mysql
 - MVC
+
+(Frontend Reactjs Incomplete)
+(Backend Golang Complete)
