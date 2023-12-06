@@ -15,6 +15,6 @@ CRUD with authentication
 
 ---
 
-Frontend React TypeScript Incomplete
+Frontend React TypeScript (Incomplete)
 
-Backend Golang Complete
+Backend Golang (Complete)
